@@ -113,54 +113,60 @@ require('lazy').setup({
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim', opts = {} },
-  {
-    -- Adds git related signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      -- See `:help gitsigns.txt`
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-      on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
-
-        -- don't override the built-in and fugitive keymaps
-        local gs = package.loaded.gitsigns
-        vim.keymap.set({ 'n', 'v' }, ']c', function()
-          if vim.wo.diff then
-            return ']c'
-          end
-          vim.schedule(function()
-            gs.next_hunk()
-          end)
-          return '<Ignore>'
-        end, { expr = true, buffer = bufnr, desc = 'Jump to next hunk' })
-        vim.keymap.set({ 'n', 'v' }, '[c', function()
-          if vim.wo.diff then
-            return '[c'
-          end
-          vim.schedule(function()
-            gs.prev_hunk()
-          end)
-          return '<Ignore>'
-        end, { expr = true, buffer = bufnr, desc = 'Jump to previous hunk' })
-      end,
-    },
-  },
+  -- {
+  --   -- Adds git related signs to the gutter, as well as utilities for managing changes
+  --   'lewis6991/gitsigns.nvim',
+  --   opts = {
+  --     -- See `:help gitsigns.txt`
+  --     signs = {
+  --       add = { text = '+' },
+  --       change = { text = '~' },
+  --       delete = { text = '_' },
+  --       topdelete = { text = '‾' },
+  --       changedelete = { text = '~' },
+  --     },
+  --     on_attach = function(bufnr)
+  --       vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
+  --
+  --       -- don't override the built-in and fugitive keymaps
+  --       local gs = package.loaded.gitsigns
+  --       vim.keymap.set({ 'n', 'v' }, ']c', function()
+  --         if vim.wo.diff then
+  --           return ']c'
+  --         end
+  --         vim.schedule(function()
+  --           gs.next_hunk()
+  --         end)
+  --         return '<Ignore>'
+  --       end, { expr = true, buffer = bufnr, desc = 'Jump to next hunk' })
+  --       vim.keymap.set({ 'n', 'v' }, '[c', function()
+  --         if vim.wo.diff then
+  --           return '[c'
+  --         end
+  --         vim.schedule(function()
+  --           gs.prev_hunk()
+  --         end)
+  --         return '<Ignore>'
+  --       end, { expr = true, buffer = bufnr, desc = 'Jump to previous hunk' })
+  --     end,
+  --   },
+  -- },
 
   {
     -- Theme inspired by Atom
     'navarasu/onedark.nvim',
+    -- priority = 1000,
+    -- config = function()
+    --   vim.cmd.colorscheme 'onedark'
+    -- end,
+  },
+  {
+    'Mofiqul/vscode.nvim',
     priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
+    config = function ()
+      vim.cmd.colorscheme 'vscode'
     end,
   },
-
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -177,11 +183,11 @@ require('lazy').setup({
 
   {
     -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
+    --'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help ibl`
-    main = 'ibl',
-    opts = {},
+    --main = 'ibl',
+    --opts = {},
   },
 
   -- "gc" to comment visual regions/lines
@@ -216,6 +222,11 @@ require('lazy').setup({
     },
     build = ':TSUpdate',
   },
+  {
+    'Civitasv/cmake-tools.nvim',
+    opts = {}
+  },
+
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
@@ -598,6 +609,17 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
-
+vim.wo.relativenumber = true
+vim.keymap.set('n', '<leader>]e', ":cnext<CR>", { desc = ']Next [E]rror' })
+vim.keymap.set('n', '<leader>[e', ":cprev<CR>", { desc = '[Previous [E]rror' })
+vim.keymap.set('n', '<leader>b', ':CMakeBuild<CR>', { desc = 'CMake[B]uild' })
+vim.keymap.set('n', '<leader>cb', ':cclose<CR>', { desc = '[C]lose [B]uild Window' })
+vim.keymap.set('n', '<leader>f', ':Format<CR>', { desc = ''})
+-- vim.diagnostic.config({virtual_text = false })
+-- vim.api.nvim_create_user_command("BuildCommand", function()
+--   local file = vim.fn.findfile("build.bat", ".;")
+--   vim.api.nvim_command(":!" .. file)
+-- end, { nargs = '*' })
+-- vim.api.nvim_set_keymap("n", "<leader>b", ":BuildCommand<CR>", {})
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
